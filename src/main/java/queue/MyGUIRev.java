@@ -50,40 +50,40 @@ public class MyGUIRev {
 
 	public void guiNe() throws Exception {
 //		
-		//config environment for JMS
-				BasicConfigurator.configure();
-		//config environment for JNDI
-				Properties settings = new Properties();
-				settings.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
-				settings.setProperty(Context.PROVIDER_URL, "tcp://localhost:61616");
-		//create context
-				Context ctx = new InitialContext(settings);
-		//lookup JMS connection factory
-				ConnectionFactory factory = (ConnectionFactory) ctx.lookup("ConnectionFactory");
-		//lookup destination. (If not exist-->ActiveMQ create once)
-				Destination destination = (Destination) ctx.lookup("dynamicQueues/hoangminhtri");
-		//get connection using credential
-				Connection con = factory.createConnection("admin", "admin");
-		//connect to MOM
-				con.start();
-		//create session
-				Session session = con.createSession(/* transaction */false, /* ACK */Session.AUTO_ACKNOWLEDGE);
-		//create producer
-				MessageProducer producer = session.createProducer(destination);
-		//create text message
-				String mess = tf.getText().trim();
-				Message msg = session.createTextMessage(mess);
+		// config environment for JMS
+		BasicConfigurator.configure();
+		// config environment for JNDI
+		Properties settings = new Properties();
+		settings.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
+		settings.setProperty(Context.PROVIDER_URL, "tcp://localhost:61616");
+		// create context
+		Context ctx = new InitialContext(settings);
+		// lookup JMS connection factory
+		ConnectionFactory factory = (ConnectionFactory) ctx.lookup("ConnectionFactory");
+		// lookup destination. (If not exist-->ActiveMQ create once)
+		Destination destination = (Destination) ctx.lookup("dynamicQueues/hoangminhtri");
+		// get connection using credential
+		Connection con = factory.createConnection("admin", "admin");
+		// connect to MOM
+		con.start();
+		// create session
+		Session session = con.createSession(/* transaction */false, /* ACK */Session.AUTO_ACKNOWLEDGE);
+		// create producer
+		MessageProducer producer = session.createProducer(destination);
+		// create text message
+		String mess = tf.getText().trim();
+		Message msg = session.createTextMessage(mess);
 //				producer.send(msg);
-				
+
 //				Person p = new Person(1001, "Thân Thị Đẹt", new Date());
-				
+
 //				String xml = new XMLConvert<Person>(p).object2XML(p);
-				msg = session.createTextMessage(mess.toString());
-				producer.send(msg);
-		//shutdown connection
-				session.close();
-				con.close();
-				System.out.println("Finished...");
+		msg = session.createTextMessage(mess.toString());
+		producer.send(msg);
+		// shutdown connection
+		session.close();
+		con.close();
+		System.out.println("Finished...");
 	}
 
 	public MyGUIRev() {
@@ -112,7 +112,6 @@ public class MyGUIRev {
 		panel.add(tf);
 		panel.add(send);
 		panel.add(reset);
-		
 
 		// Text Area at the Center
 		ta = new JTextArea();
@@ -122,7 +121,7 @@ public class MyGUIRev {
 		frame.getContentPane().add(BorderLayout.NORTH, mb);
 		frame.getContentPane().add(BorderLayout.CENTER, ta);
 		frame.setVisible(true);
-		
+
 		try {
 			nhan();
 		} catch (Exception e2) {
@@ -138,64 +137,63 @@ public class MyGUIRev {
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				} 
+				}
 //				ta.setText(ms);
 
 			}
 		});
 	}
-	
+
 	public void nhan() throws Exception {
 //		
-		//thiết lập môi trường cho JMS
-				BasicConfigurator.configure();
-		//thiết lập môi trường cho JJNDI
-				Properties settings = new Properties();
-				settings.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
-				settings.setProperty(Context.PROVIDER_URL, "tcp://localhost:61616");
-		//tạo context
-				Context ctx = new InitialContext(settings);
-		//lookup JMS connection factory
-				Object obj = ctx.lookup("ConnectionFactory");
-				ConnectionFactory factory = (ConnectionFactory) obj;
-		//lookup destination
-				Destination destination = (Destination) ctx.lookup("dynamicQueues/thanthidet");
-		//tạo connection
-				Connection con = factory.createConnection("admin", "admin");
-		//nối đến MOM
-				con.start();
-		//tạo session
-				Session session = con.createSession(/* transaction */false, /* ACK */Session.CLIENT_ACKNOWLEDGE);
-		//tạo consumer
-				MessageConsumer receiver = session.createConsumer(destination);
-		//blocked-method for receiving message - sync
-		//receiver.receive();
-		//Cho receiver lắng nghe trên queue, chừng có message thì notify - async
-				System.out.println("Tý was listened on queue...");
-				receiver.setMessageListener(new MessageListener() {
-					
-		//có message đến queue, phương thức này được thực thi
-					public void onMessage(Message msg) {// msg là message nhận được
-						try {
-							if (msg instanceof TextMessage) {
-								TextMessage tm = (TextMessage) msg;
-								String txt = tm.getText();
-								noiDung += txt + "\n";
-//								listMess.add(noiDung);
-								ta.setText(noiDung);
-								msg.acknowledge();// gửi tín hiệu ack
-							} else if (msg instanceof ObjectMessage) {
-								ObjectMessage om = (ObjectMessage) msg;
-								System.out.println(om);
-							}
-		//others message type....
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
+		// thiết lập môi trường cho JMS
+		BasicConfigurator.configure();
+		// thiết lập môi trường cho JJNDI
+		Properties settings = new Properties();
+		settings.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
+		settings.setProperty(Context.PROVIDER_URL, "tcp://localhost:61616");
+		// tạo context
+		Context ctx = new InitialContext(settings);
+		// lookup JMS connection factory
+		Object obj = ctx.lookup("ConnectionFactory");
+		ConnectionFactory factory = (ConnectionFactory) obj;
+		// lookup destination
+		Destination destination = (Destination) ctx.lookup("dynamicQueues/thanthidet");
+		// tạo connection
+		Connection con = factory.createConnection("admin", "admin");
+		// nối đến MOM
+		con.start();
+		// tạo session
+		Session session = con.createSession(/* transaction */false, /* ACK */Session.CLIENT_ACKNOWLEDGE);
+		// tạo consumer
+		MessageConsumer receiver = session.createConsumer(destination);
+		// blocked-method for receiving message - sync
+		// receiver.receive();
+		// Cho receiver lắng nghe trên queue, chừng có message thì notify - async
+		System.out.println("Tý was listened on queue...");
+		receiver.setMessageListener(new MessageListener() {
 
-		
-				});
+			// có message đến queue, phương thức này được thực thi
+			public void onMessage(Message msg) {// msg là message nhận được
+				try {
+					if (msg instanceof TextMessage) {
+						TextMessage tm = (TextMessage) msg;
+						String txt = tm.getText();
+						noiDung += txt + "\n";
+//								listMess.add(noiDung);
+						ta.setText(noiDung);
+						msg.acknowledge();// gửi tín hiệu ack
+					} else if (msg instanceof ObjectMessage) {
+						ObjectMessage om = (ObjectMessage) msg;
+						System.out.println(om);
+					}
+					// others message type....
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+		});
 //				session.close();
 //				con.close();
 	}
